@@ -13,3 +13,5 @@ class LoginPage:
         self.page.locator('//*[@id="officeIdDiv_arrow"]').click()
         self.page.locator(office_xpath).click()
         self.page.locator('//*[@id="search-form"]/div[3]/span[1]/input').click()
+
+

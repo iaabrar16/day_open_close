@@ -25,9 +25,8 @@ def test_day_close_flow():
 
 
         # After login and office selection
-
-        business_date_text = page.locator('//*[@id="sessionBusinessDateReload"]/span').inner_text().strip()
-        print("🔍 Business Date Text:", business_date_text)
+        # business_date_text = page.locator('//*[@id="sessionBusinessDateReload"]/span').inner_text().strip()
+        # print("🔍 Business Date Text:", business_date_text)
 
 
         page.wait_for_selector('//*[@id="sessionBusinessDateReload"]/a', timeout=15000)
@@ -38,15 +37,12 @@ def test_day_close_flow():
             print("🔁 Status is DAY OPEN — navigating to Day Close.")
             day_close.add_currency_denomination()
             day_close.go_to_day_close()
-            #day_close.click_initiate()
+            day_close.click_initiate()
 
             # Handle pending links before clicking Day Close
-            # Instead of separate handle calls, call this single method
             dps_vo_page = DPSVOPage(page)
             dps_vo_page.handle_first_available_link()
             click_reinitiate_buttons(page)
-            day_close.click_initiate()
-
             day_close.click_day_close()
             
         else:

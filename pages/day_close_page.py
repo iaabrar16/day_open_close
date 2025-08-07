@@ -1,3 +1,4 @@
+from time import time
 from playwright.sync_api import Page
 import pyperclip
 
@@ -27,6 +28,8 @@ class DayClosePage:
         self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').wait_for(timeout=5000)
         self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').click()
 
+
+
     def go_to_day_close(self): #day close button
         self.page.locator('//*[@id="module-accounting"]/a').click() #accounting
         self.page.locator('//*[@id="wrapper"]/ul/li[1]').click()    #admin
@@ -42,9 +45,12 @@ class DayClosePage:
             self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').click()
             print("2")
 
-
+            
     def click_day_close(self): 
         if self.page.locator('//*[@id="dayClose"]').is_visible(timeout=3000):
             self.page.locator('//*[@id="dayClose"]').click()
             print("✅ Day Close clicked.")
             print("3")
+
+
+
