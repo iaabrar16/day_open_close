@@ -38,12 +38,28 @@ def test_day_close_flow():
             day_close.add_currency_denomination()
             day_close.go_to_day_close()
             day_close.click_initiate()
+            page.wait_for_timeout(3000)
 
-            # Handle pending links before clicking Day Close
+
+            # Process ALL DPS, VO, VO Savings links sequentially
             dps_vo_page = DPSVOPage(page)
-            dps_vo_page.handle_first_available_link()
-            click_reinitiate_buttons(page)
-            day_close.click_day_close()
+            if dps_vo_page.process_all_links_in_order():
+                click_reinitiate_buttons(page)
+                page.wait_for_timeout(3000)
+                day_close.click_day_close()
+
+            # ✅ Toast check only in Day Close flow
+            page.wait_for_timeout(2000)
+            if page.locator('//*[@id="toast-container"]/div/div').is_visible(timeout=3000):
+                toast_text = page.locator('//*[@id="toast-container"]/div/div').inner_text().strip()
+                print("⚠️ Toast:", toast_text)
+
+                if "fund requisition" in toast_text.lower():
+                    fund_page = FundRequisitionPage(page)
+                    fund_page.create_requisition()
+                    day_close.go_to_day_close()
+                    day_close.click_initiate()
+                    day_close.click_day_close()
             
         else:
             print("🔁 Status is DAY CLOSE — navigating to Day Open.")
@@ -53,18 +69,18 @@ def test_day_close_flow():
 
 
 
-        # # Check toast
-        page.wait_for_timeout(2000)
-        if page.locator('//*[@id="toast-container"]/div/div').is_visible(timeout=3000):
-            toast_text = page.locator('//*[@id="toast-container"]/div/div').inner_text().strip()
-            print("⚠️ Toast:", toast_text)
+        # # # Check toast
+        # page.wait_for_timeout(2000)
+        # if page.locator('//*[@id="toast-container"]/div/div').is_visible(timeout=3000):
+        #     toast_text = page.locator('//*[@id="toast-container"]/div/div').inner_text().strip()
+        #     print("⚠️ Toast:", toast_text)
 
-            if "fund requisition" in toast_text.lower():
-                fund_page = FundRequisitionPage(page)
-                fund_page.create_requisition()
-                day_close.go_to_day_close()
-                day_close.click_initiate()
-                day_close.click_day_close()
+        #     if "fund requisition" in toast_text.lower():
+        #         fund_page = FundRequisitionPage(page)
+        #         fund_page.create_requisition()
+        #         day_close.go_to_day_close()
+        #         day_close.click_initiate()
+        #         day_close.click_day_close()
 
 
         page.wait_for_timeout(3000)

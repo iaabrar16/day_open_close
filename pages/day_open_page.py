@@ -10,13 +10,56 @@ class DayOpenPage:
         self.page.locator('//*[@id="wrapper"]/ul/li[1]/ul/li[1]/div/span').click()
         self.page.locator('//*[@id="wrapper"]/ul/li[1]/ul/li[1]/ul/li[1]/a/span').click()
 
-    def click_initiate(self): # initiate button
-        if self.page.locator('//*[@id="initiate"]').is_visible(timeout=3000):
-            self.page.locator('//*[@id="initiate"]').click()
-            print("✅ Initiate clicked.")
+    def click_initiate(self):
+        try:
+            initiate_btn = self.page.locator('//*[@id="initiate"]')
+            if initiate_btn.is_visible(timeout=2000):
+                initiate_btn.click()
+                print("✅ Initiate clicked.")
 
-    def click_day_open(self): 
-        if self.page.locator('//*[@id="dayOpen"]').is_visible(timeout=3000):
-            self.page.locator('//*[@id="dayOpen"]').click()
-            print("✅ Day Close clicked.")
+                # Click confirm button
+                confirm_btn = self.page.get_by_role("button", name="Yes")
+                if confirm_btn.is_visible(timeout=3000):
+                    confirm_btn.click()
+                    print("✅ Confirm accepted.")
+
+                    # Wait for popup after confirm
+                    popup_locator = self.page.locator("div[role='dialog'], .swal2-popup")  # common popup selectors
+                    if popup_locator.wait_for(timeout=5000):
+                        print("ℹ️ Popup detected — pressing Enter.")
+                        self.page.keyboard.press("Enter")
+                    else:
+                        print("⚠️ Popup not found after confirm.")
+                else:
+                    print("⚠️ Confirm button not found.")
+            else:
+                print("ℹ️ Initiate button not found or not visible.")
+        except Exception as e:
+            print(f"❌ Error in click_initiate: {e}")
+
+
+
+    # def click_initiate(self): # initiate button
+    #     if self.page.locator('//*[@id="initiate"]').is_visible(timeout=3000):
+    #         self.page.locator('//*[@id="initiate"]').click()
+    #         print("✅ Initiate clicked.")
+
+
+
+    def click_day_open(self):
+        try:
+            day_open_btn = self.page.locator('//*[@id="dayOpen"]')
+            if day_open_btn.is_visible(timeout=3000):
+                day_open_btn.click()
+                print("✅ Day Open clicked.")
+            else:
+                print("ℹ️ Day Open button not found or not visible.")
+        except Exception as e:
+            print(f"❌ Error in click_day_open: {e}")
+
+
+    # def click_day_open(self): 
+    #     if self.page.locator('//*[@id="dayOpen"]').is_visible(timeout=3000):
+    #         self.page.locator('//*[@id="dayOpen"]').click()
+    #         print("✅ Day Close clicked.")
             

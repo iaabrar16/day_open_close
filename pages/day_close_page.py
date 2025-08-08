@@ -35,22 +35,51 @@ class DayClosePage:
         self.page.locator('//*[@id="wrapper"]/ul/li[1]').click()    #admin
         self.page.locator('//*[@id="wrapper"]/ul/li[1]/ul/li[1]/div/span').click() #general settings
         self.page.locator('//*[@id="wrapper"]/ul/li[1]/ul/li[1]/ul/li[2]/a/span').click() #day close
-        print("1")
+        
+    def click_initiate(self):
+        try:
+            initiate_btn = self.page.locator('//*[@id="initiate"]')
+            if initiate_btn.is_visible(timeout=3000):
+                initiate_btn.click()
+                print("✅ Initiate clicked.")
 
-    def click_initiate(self): # initiate button
-        if self.page.locator('//*[@id="initiate"]').is_visible(timeout=3000):
-            self.page.locator('//*[@id="initiate"]').click()
-            print("✅ Initiate clicked.")
-            self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').wait_for(timeout=5000)
-            self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').click()
-            print("2")
+                confirm_btn = self.page.locator('xpath=/html/body/div[11]/div[7]/div/button')
+                if confirm_btn.is_visible(timeout=3000):
+                    confirm_btn.click()
+                    print("✅ Confirm accepted.")
+                else:
+                    print("⚠️ Confirm button not found.")
+            else:
+                print("ℹ️ Initiate button not found or not visible.")
+        except Exception as e:
+            print(f"❌ Error in click_initiate: {e}")
 
+    # def click_initiate(self): # initiate button
+    #     if self.page.locator('//*[@id="initiate"]').is_visible(timeout=3000):
+    #         self.page.locator('//*[@id="initiate"]').click()
+    #         print("✅ Initiate clicked.")
+    #         self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').wait_for(timeout=5000)
+    #         self.page.locator('xpath=/html/body/div[11]/div[7]/div/button').click()
             
-    def click_day_close(self): 
-        if self.page.locator('//*[@id="dayClose"]').is_visible(timeout=3000):
-            self.page.locator('//*[@id="dayClose"]').click()
-            print("✅ Day Close clicked.")
-            print("3")
+
+    def click_day_close(self):
+        try:
+            locator = self.page.locator('//*[@id="dayClose"]')
+            if locator.is_visible(timeout=3000):
+                locator.click()
+                print("✅ Day Close clicked.")
+            else:
+                print("ℹ️ Day Close button not found — skipping.")
+        except Exception as e:
+            print(f"⚠️ Error while trying to click Day Close: {e}")
+
+
+
+    # def click_day_close(self): 
+    #     if self.page.locator('//*[@id="dayClose"]').is_visible(timeout=3000):
+    #         self.page.locator('//*[@id="dayClose"]').click()
+    #         print("✅ Day Close clicked.")
+            
 
 
 
