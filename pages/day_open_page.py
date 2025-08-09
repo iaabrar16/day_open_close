@@ -17,25 +17,29 @@ class DayOpenPage:
                 initiate_btn.click()
                 print("✅ Initiate clicked.")
 
-                # Click confirm button
+                # Click confirm button with role 'button' and name 'Yes'
                 confirm_btn = self.page.get_by_role("button", name="Yes")
                 if confirm_btn.is_visible(timeout=3000):
                     confirm_btn.click()
                     print("✅ Confirm accepted.")
 
-                    # Wait for popup after confirm
-                    popup_locator = self.page.locator("div[role='dialog'], .swal2-popup")  # common popup selectors
-                    if popup_locator.wait_for(timeout=5000):
-                        print("ℹ️ Popup detected — pressing Enter.")
-                        self.page.keyboard.press("Enter")
+                    # Wait for the specific modal and press Enter if appears
+                    modal = self.page.locator('/html/body/div[4]')
+                    if modal.wait_for(state='visible', timeout=5000):
+                        # print("ℹ️ Modal detected — pressing Enter.")
+                        # self.page.keyboard.press("Enter")
+                        self.page.reload()
+                        print("ℹ️ Modal detected — page reload.")
+                        
                     else:
-                        print("⚠️ Popup not found after confirm.")
+                        print("⚠️ Modal not detected after confirm.")
                 else:
                     print("⚠️ Confirm button not found.")
             else:
-                print("ℹ️ Initiate button not found or not visible.")
+                print("ℹ️ Initiate button not visible.")
         except Exception as e:
             print(f"❌ Error in click_initiate: {e}")
+
 
 
 

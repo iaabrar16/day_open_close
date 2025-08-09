@@ -12,27 +12,43 @@ class DPSVOPage:
         print(f"✅ {label} tab opened.")
 
         try:
-            new_tab.wait_for_load_state("load", timeout=8000)
+            new_tab.wait_for_load_state("load", timeout=25000)
         except:
             print(f"⚠️ {label} tab did not fully load.")
 
-        # Retry button
+        # Retry / Select All button handling
         try:
-            retry_button = new_tab.locator('//*[@id="button-block"]/input[2]')
-            retry_button.wait_for(state="visible", timeout=5000)
+            # Prefer CSS with has-text for better reliability
+            new_tab.wait_for_selector('button:has-text("Select All")', timeout=8000)
+            retry_button = new_tab.locator('button:has-text("Select All")')
             retry_button.click()
-            print(f"✅ Retry (Select All) clicked in {label}.")
-        except Exception as e:
-            print(f"⚠️ Retry button not clickable in {label}: {e}")
+            print(f"✅ Retry/Select All clicked in {label}.")
+        except Exception as e1:
+            print(f"⚠️ Retry/Select All button not found or clickable in {label} using has-text: {e1}")
+            try:
+                # fallback xpath locator
+                new_tab.wait_for_selector('xpath=//*[@id="button-block"]/input[2]', timeout=8000)
+                retry_button = new_tab.locator('xpath=//*[@id="button-block"]/input[2]')
+                retry_button.click()
+                print(f"✅ Retry/Select All clicked in {label} using xpath fallback.")
+            except Exception as e2:
+                print(f"⚠️ Retry/Select All button not clickable in {label} fallback xpath: {e2}")
 
-        # Save button
+        # Save / Retry button handling
         try:
-            save_button = new_tab.locator('//*[@id="saveButtonId"]')
-            save_button.wait_for(state="visible", timeout=5000)
+            new_tab.wait_for_selector('button:has-text("Retry")', timeout=8000)
+            save_button = new_tab.locator('button:has-text("Retry")')
             save_button.click()
-            print(f"✅ Save clicked in {label}.")
-        except Exception as e:
-            print(f"⚠️ Save button not clickable in {label}: {e}")
+            print(f"✅ Save/Retry clicked in {label}.")
+        except Exception as e1:
+            print(f"⚠️ Save/Retry button not found or clickable in {label} using has-text: {e1}")
+            try:
+                new_tab.wait_for_selector('xpath=//*[@id="saveButtonId"]', timeout=8000)
+                save_button = new_tab.locator('xpath=//*[@id="saveButtonId"]')
+                save_button.click()
+                print(f"✅ Save/Retry clicked in {label} using xpath fallback.")
+            except Exception as e2:
+                print(f"⚠️ Save/Retry button not clickable in {label} fallback xpath: {e2}")
 
         new_tab.close()
         print(f"✅ {label} tab closed.")

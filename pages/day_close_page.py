@@ -1,6 +1,7 @@
 from time import time
 from playwright.sync_api import Page
 import pyperclip
+from pages.common_actions import handle_office_busy
 
 
 class DayClosePage:
@@ -12,6 +13,10 @@ class DayClosePage:
         self.page.locator('//*[@id="wrapper"]/ul/li[7]').click()
         self.page.locator('//*[@id="wrapper"]/ul/li[7]/ul/li[2]/a').click()
         self.page.locator('//*[@id="pageContent"]/div/div[1]/div[2]/a').click()
+
+        
+        # ✅ Office Busy check at start of every loop
+        handle_office_busy(self.page, "16250", "abc123$") 
 
         self.page.wait_for_selector('//*[@id="totalBalance"]', timeout=10000)
         balance = self.page.locator('//*[@id="totalBalance"]').inner_text()

@@ -1,8 +1,9 @@
-from playwright.sync_api import Page
+from playwright.sync_api import Page, TimeoutError
 
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
+
 
     def login(self, username: str, password: str):
         self.page.locator('//*[@id="username"]').fill(username)
