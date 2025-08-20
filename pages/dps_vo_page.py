@@ -39,6 +39,7 @@ class DPSVOPage:
             new_tab.wait_for_selector('button:has-text("Retry")', timeout=8000)
             save_button = new_tab.locator('button:has-text("Retry")')
             save_button.click()
+            self.page.wait_for_timeout(2000)
             print(f"✅ Save/Retry clicked in {label}.")
         except Exception as e1:
             print(f"⚠️ Save/Retry button not found or clickable in {label} using has-text: {e1}")
@@ -49,7 +50,8 @@ class DPSVOPage:
                 print(f"✅ Save/Retry clicked in {label} using xpath fallback.")
             except Exception as e2:
                 print(f"⚠️ Save/Retry button not clickable in {label} fallback xpath: {e2}")
-
+           
+        self.page.wait_for_timeout(3000)
         new_tab.close()
         print(f"✅ {label} tab closed.")
 

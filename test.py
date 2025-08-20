@@ -117,7 +117,7 @@ def test_example():
                 # new_tab = new_page_info.value
                 # new_tab.wait_for_load_state()
                 # new_tab.locator('//*[@id="root"]/div/div/div[1]/div[2]/div/div[1]/nav/div[3]/ul/div/a/span').click()
-                page.goto("https://env46.erp.bracits.net/otc/app/loanProposal/create")
+                page.goto("https://env69.erp.bracits.net/otc/app/loanProposal/create")
                 page.wait_for_load_state()
                 # Wait for and click the menu toggle
                 page.locator('//*[@id="root"]/div/div/div[1]/div[2]/div/div[1]/nav/div[3]/div/span[1]/span[2]').wait_for(state="visible", timeout=5000)

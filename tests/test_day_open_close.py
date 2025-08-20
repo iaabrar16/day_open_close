@@ -6,38 +6,41 @@ from pages.fund_requisition_page import FundRequisitionPage
 from pages.common_actions import click_reinitiate_buttons, handle_office_busy
 from pages.dps_vo_page import DPSVOPage
 from pages.month_close_page import MonthClosePage
+from pages.mis_fis_mismatch_page import MISFISMismatchPage
+
 
 
 from datetime import datetime, timedelta
 
-def test_day_open_close_till_date(last_date_str="25-06-2025"):
+def test_day_open_close_till_date(last_date_str="30-09-2025"):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False, slow_mo=1000)
         page = browser.new_page()
 
         # page.goto("https://env46.erp.bracits.net/")
-        page.goto("https://erpstaging.brac.net/")
+        page.goto("https://env69.erp.bracits.net/")
+        # page.goto("https://erpstaging.brac.net/")
 
         login = LoginPage(page)
-        login.login("16250", "abc123$")
+        login.login("69066", "abc123$") #16250,69066
         login.select_office()
 
-  
         # Close the modal
-        modal = page.locator('//*[@id="modals"]')
+        # modal = page.locator('//*[@id="modals"]')
         # Wait until the modal is visible
-        modal.wait_for(state="visible", timeout=3000)
+        # modal.wait_for(state="visible", timeout=3000)
         # Press Enter to close the modal
-        page.keyboard.press("Enter")
+        # page.keyboard.press("Enter")
 
         day_close = DayClosePage(page)
         day_open = DayOpenPage(page)
         fund_page = FundRequisitionPage(page)
         dps_vo_page = DPSVOPage(page)
         month_close_page = MonthClosePage(page)
+        mis_fis_page = MISFISMismatchPage(page)
 
         # Convert last_date_str to datetime object
-        last_date_str = "01-07-2025"
+        last_date_str = "30-09-2025"
         last_date = datetime.strptime(last_date_str, "%d-%m-%Y")
 
         while True:           
@@ -67,13 +70,16 @@ def test_day_open_close_till_date(last_date_str="25-06-2025"):
                 click_reinitiate_buttons(page)
                 month_close_page.execute_month_close_if_needed()
 
-                page.wait_for_timeout(3000)
+                page.wait_for_timeout(10000)
 
                 if dps_vo_page.process_all_links_in_order():
                     click_reinitiate_buttons(page)
                     page.wait_for_timeout(3000)
                     day_close.click_initiate()
                     day_close.click_day_close()
+
+                if mis_fis_page.fix_mismatch_and_close(day_close):
+                    print("💡 Day Close executed after MIS-FIS fix in new tab.")
 
                 # Toast check in Day Close flow
                 page.wait_for_timeout(2000)
@@ -87,26 +93,29 @@ def test_day_open_close_till_date(last_date_str="25-06-2025"):
                         day_close.click_initiate()
                         day_close.click_day_close()
 
+                    if "Ambiguous method overloading" in toast_text.lower():
+                        day_close.click_initiate()
+                        day_close.click_day_close()    
+
             else:
                 print("🔁 Status is DAY CLOSE — navigating to Day Open.")
                 day_open.go_to_day_open()
                 day_open.click_initiate()
                 day_open.click_day_open()
-                # day_close.go_to_day_close()
-                # month_close_page.execute_month_close_if_needed()
+                month_close_page.execute_month_close_if_needed()
                 # click_reinitiate_buttons(page)
-                month_close_page.check_month_close_popup_and_navigate()
-                month_close_page.click_business_month_close_navigation()
-                day_open.click_initiate()
-                month_close_page.month_close_button()
+                # month_close_page.check_month_close_popup_and_navigate()
+                # month_close_page.click_business_month_close_navigation()
+                # day_open.click_initiate()
+                # month_close_page.month_close_button()
 
             # Wait a little before next iteration (optional)
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(1000)
 
             # Refresh page or reload to update business date and status for next iteration
             page.reload()
 
 
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(1000)
         page.screenshot(path="screenshots/screenshot.png")
         browser.close()

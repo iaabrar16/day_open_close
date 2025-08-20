@@ -109,5 +109,9 @@ class MonthClosePage:
         month = self.get_month_from_message()
         if month:
             self.click_month_close_link()
+            self.month_close_page.check_month_close_popup_and_navigate()
+            self.month_close_page.click_business_month_close_navigation()
+            self.day_open.click_initiate()
+            self.month_close_page.month_close_button()
         else:
             print("ℹ️ No month close action needed.")
