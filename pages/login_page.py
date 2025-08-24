@@ -10,7 +10,7 @@ class LoginPage:
         self.page.locator('//*[@id="password"]').fill(password)
         self.page.locator('//*[@id="kc-login"]').click()
 
-    def select_office(self, office_xpath='//*[@id="41"]/div[2]'): #418,41
+    def select_office(self, office_xpath='//*[@id="418"]/div[2]'): #418,41
         self.page.locator('//*[@id="officeIdDiv_arrow"]').click()
         self.page.locator(office_xpath).click()
         self.page.locator('//*[@id="search-form"]/div[3]/span[1]/input').click()

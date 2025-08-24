@@ -18,11 +18,12 @@ def test_day_open_close_till_date(last_date_str="30-09-2025"):
         page = browser.new_page()
 
         # page.goto("https://env46.erp.bracits.net/")
-        page.goto("https://env69.erp.bracits.net/")
+        # page.goto("https://env69.erp.bracits.net/")
+        page.goto("https://env73.erp.bracits.net/")
         # page.goto("https://erpstaging.brac.net/")
 
         login = LoginPage(page)
-        login.login("69066", "abc123$") #16250,69066
+        login.login("16250", "abc123$") #16250,69066
         login.select_office()
 
         # Close the modal
